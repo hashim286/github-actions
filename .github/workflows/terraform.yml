@@ -51,10 +51,6 @@ jobs:
       if: github.event_name == 'push'
       run: terraform apply -auto-approve -input=false
     
-    - name: Ping 
-      if: ${{ github.ref == 'refs/heads/test' && github.event_name == 'push' }}
-      run: ping 1.1.1.1 -c 4
-
     - name: Cleanup Test Env
       if: ${{ github.ref == 'refs/heads/test' && github.event_name == 'push' }}
       run: terraform destroy -auto-approve -input=false
