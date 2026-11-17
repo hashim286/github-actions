@@ -30,6 +30,10 @@ resource "aws_instance" "web" {
               echo "Hello World" > /var/www/html/index.html
               systemctl restart apache2
               EOF
+  tags = {
+    Name = var.instance_name
+    Environment = var.environment
+  }
 }
 
 resource "aws_security_group" "web-sg" {
