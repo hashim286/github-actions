@@ -22,7 +22,7 @@ jobs:
   terraform-create-env:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: ${{ env.ENVIRONMENT }}
+    environment: main
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -60,7 +60,7 @@ jobs:
     if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
     name: 'Terraform Destroy Test Env'
     runs-on: ubuntu-latest
-    environment: ${{ env.TEST_ENV }}
+    environment: test
     defaults:
       run:
         shell: bash
