@@ -18,7 +18,7 @@ variable "aws_region" {
   default     = "us-east-1"
 }
 
-variable "state_file" {
+variable "tf_state_file" {
   description = "Key for the Terraform state file"
   type        = string
   default     = "terraform.tfstate"
