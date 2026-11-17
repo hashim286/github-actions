@@ -12,7 +12,7 @@ env:
     INSTANCE_NAME: WEB-INSTANCE-${{ github.ref_name }}
     ENVIRONMENT: ${{ github.ref_name }}
     AWS_REGION: us-east-1
-    TF_STATE_FILE: terraform-{{ github.ref_name }}.tfstate
+    TF_STATE_FILE: terraform-${{ github.ref_name }}.tfstate
 
 permissions:
   contents: read
