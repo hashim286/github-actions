@@ -13,15 +13,16 @@ env:
     ENVIRONMENT: ${{ github.ref_name }}
     AWS_REGION: us-east-1
     TF_STATE_FILE: terraform-${{ github.ref_name }}
+    TEST_ENV: test
 
 permissions:
   contents: read
 
 jobs:
-  terraform:
+  terraform-create-env:
     name: 'Terraform'
     runs-on: ubuntu-latest
-    environment: production
+    environment: ${{ env.ENVIRONMENT }}
 
     # Use the Bash shell regardless whether the GitHub Actions runner is ubuntu-latest, macos-latest, or windows-latest
     defaults:
@@ -54,7 +55,31 @@ jobs:
     - name: Terraform Apply
       if: github.event_name == 'push'
       run: terraform apply -auto-approve -var='instance_name=${{ env.INSTANCE_NAME }}' -var='environment=${{ env.ENVIRONMENT }}' -var='aws_region=${{ env.AWS_REGION }}' -input=false
-    
+  
+  terraform-destroy-test-env:
+    if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
+    name: 'Terraform Destroy Test Env'
+    runs-on: ubuntu-latest
+    environment: ${{ env.TEST_ENV }}
+    defaults:
+      run:
+        shell: bash
+        working-directory: ${{ env.TF_DIRECTORY }}
+
+    steps: 
+    - name: Checkout
+      uses: actions/checkout@v4
+
+    # Install the latest version of Terraform CLI and configure the Terraform CLI configuration file with a Terraform Cloud user API token
+    - name: Setup Terraform
+      uses: hashicorp/setup-terraform@v1
+      with:
+        terraform_version: latest
+        directory: ${{ env.TF_DIRECTORY }}
+
+    # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
+    - name: Terraform Init
+      run: terraform init -backend-config="key=${{ env.TEST_ENV }}.tfstate" -input=false
+
     - name: Cleanup Test Env
-      if: ${{ github.ref == 'refs/heads/main' && github.event_name == 'push' }}
       run: terraform destroy -auto-approve -input=false
