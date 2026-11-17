@@ -79,7 +79,7 @@ jobs:
 
     # Initialize a new or existing Terraform working directory by creating initial files, loading any remote state, downloading modules, etc.
     - name: Terraform Init
-      run: terraform init -backend-config="key=${{ env.TEST_ENV }}.tfstate" -input=false
+      run: terraform init -backend-config="key=terraform-${{ env.TEST_ENV }}.tfstate" -input=false
 
     - name: Cleanup Test Env
       run: terraform destroy -auto-approve -input=false
