@@ -31,7 +31,7 @@ resource "aws_instance" "web" {
               systemctl restart apache2
               EOF
   tags = {
-    Name = var.instance_name
+    Name        = var.instance_name
     Environment = var.environment
   }
 }
